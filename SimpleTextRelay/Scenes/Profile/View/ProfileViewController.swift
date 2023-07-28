@@ -9,8 +9,6 @@ import UIKit
 import Quickblox
 
 class ProfileViewController: UIViewController {
-    
-    var currentUser: QBUUser?
     @IBOutlet weak var fullNameLbl: UILabel!
     @IBOutlet weak var phoneNumber: UILabel!
     @IBOutlet weak var emailLbl: UILabel!
@@ -19,15 +17,27 @@ class ProfileViewController: UIViewController {
     @IBOutlet var profilePicture: UIImageView!
     @IBOutlet var imgBg: UIImageView!
     @IBOutlet weak var profileForm: UIView!
+    @IBOutlet weak var jobLbl: UILabel!
+    @IBOutlet weak var dobLbl: UILabel!
+    @IBOutlet weak var hobbiesLbl: UILabel!
+    @IBOutlet weak var bioLbl: UILabel!
     
+    var currentUser: QBUUser? = nil
+    var currentUserCustomData: UserCustomData = UserCustomData()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         currentUser = QBSession.current.currentUser
+        getUserProfilePicture()
+        getUserCustomData()
         fullNameLbl.text = currentUser?.fullName
         phoneNumber.text = currentUser?.phone ?? "No Phone Number"
         emailLbl.text = currentUser?.email ?? "No Email"
         websiteLbl.text = currentUser?.website ?? "No Website"
+        jobLbl.text = currentUserCustomData.jobTitle ?? "Job not provided"
+        dobLbl.text = currentUserCustomData.dob ?? "Date of Birth not provided"
+        hobbiesLbl.text = currentUserCustomData.hobbies ?? "Hobbies not provided"
+        bioLbl.text = currentUserCustomData.bio ?? "Bio not provided"
     }
     
     override func viewDidLayoutSubviews() {
@@ -62,12 +72,44 @@ class ProfileViewController: UIViewController {
         pictureView.backgroundColor = .lightGray
     }
     
-//    func getUserCustomData() {
-//        if let data = curUser.customData?.data(using: .utf8),
-//           let currentUserCustomData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : String]  {
-//            self.curUserCustomData = currentUserCustomData
-//        }
-//    }
+    func getChangedImage() {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "EditProfileViewController") as? EditProfileViewController
+        if vc?.selectedImage != nil {
+            vc?.profilePictureTransferDelegate = self
+        }
+    }
+    
+    func getUserCustomData() {
+        if let data = currentUser!.customData?.data(using: .utf8) {
+            let decoder = JSONDecoder()
+            do {
+                let currentUserCustomData = try decoder.decode(UserCustomData.self, from: data)
+                self.currentUserCustomData = currentUserCustomData
+            } catch {
+                print("Error decoding custom data: \(error)")
+            }
+        }
+    }
+    
+    func getUserProfilePicture() {
+        QBRequest.blob(withID: currentUser!.blobID, successBlock: { (response, blob) in
+            
+            guard let blobUID = blob.uid else {return}
+            QBRequest.downloadFile(withUID: blobUID, successBlock: { (response, fileData)  in
+                if let image = UIImage(data: fileData) {
+                    self.profilePicture.image = image
+                }
+            }, statusBlock: { (request, status) in
+                print("Image being downloaded:",status)
+            }, errorBlock: { (response) in
+                print("Failed to download Image:",response)
+            })
+            
+        }, errorBlock: { (response) in
+            print("Failed to get blobId:",response)
+        })
+    }
     
     func logout() {
         let sb = UIStoryboard(name: "Main", bundle: nil)
@@ -98,8 +140,24 @@ class ProfileViewController: UIViewController {
     }
     
     func goToEditProfile() {
+        getChangedImage()
         self.navigateTo(withStoryboard: "Main", to: "EditProfileViewController", class: EditProfileViewController.self)
     }
     
+    
+}
+
+extension ProfileViewController: ProfilePictureDelegate {
+    func imgChange(image: UIImage) {
+        DispatchQueue.main.async {
+            self.profilePicture.image = image
+        }
+    }
+    
+    
+}
+
+
+class CustomTextBorder {
     
 }

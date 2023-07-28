@@ -29,6 +29,10 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
     
     var curUser = QBUUser()
     var curUserCustomData: UserCustomData = UserCustomData(dob: "", hobbies: "", bio: "", jobTitle: "")
+    var selectedImage: UIImage? = nil
+    var isUploadingPicture: Bool = false
+    var didSelectPicture: Bool = false
+    var profilePictureTransferDelegate: ProfilePictureDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +78,7 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func choosePhoto(_ sender: Any) {
-        choosePhotoFromPicker()
+        showProfilePhotoSource()
     }
     @IBAction func updateProfile(_ sender: Any) {
         updateAlert()
@@ -138,28 +142,46 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
     
     ///TODO -
     func updateUser() {
-        updateUserCustomData()
-        QBRequest.updateCurrentUser(updateUserParameters, successBlock: {response, user in
-            self.goToProfile()
-        }, errorBlock: { (response) in
-            
-        })
+        
+        if didSelectPicture {
+               let alert = updateAlertWithProfilePicture()
+            present(alert, animated: true)
+               updateProfileImage { [weak self] in
+                   // Completion handler after image upload
+                   self?.updateUserCustomData()
+                   QBRequest.updateCurrentUser(self!.updateUserParameters, successBlock: {response, user in
+                       // Completion handler after user update
+                       alert.dismiss(animated: true)
+                       self?.goToProfile()
+                   }, errorBlock: { (response) in
+                       // Error handling for user update
+                   })
+               }
+           } else {
+               updateUserCustomData()
+               QBRequest.updateCurrentUser(updateUserParameters, successBlock: {response, user in
+                   self.profilePictureTransferDelegate?.imgChange(image: self.selectedImage!)
+                   self.goToProfile()
+               }, errorBlock: { (response) in
+                   // Error handling for user update
+               })
+           }
+    }
+    
+    func updateAlertWithProfilePicture() -> UIAlertController {
+        return UIAlertController(title: "Updating Profile", message: "Uploading image", preferredStyle: .alert)
     }
     
     func updateAlert() {
-        
         let alert = UIAlertController(title: "Updating Profile", message: "Are you sure you want to update?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default,handler: { _ in
             self.updateUser()
         }))
         alert.addAction(UIAlertAction(title: "No", style: .cancel))
         present(alert,animated: true)
-        
     }
     
     func choosePhotoFromPicker() {
-        showProfilePhotoSource()
-        
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
         present(imagePicker,animated: true)
@@ -168,7 +190,9 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
     func showProfilePhotoSource() {
         let alert = UIAlertController(title: "Select source", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default))
-        alert.addAction(UIAlertAction(title: "Album", style: .default))
+        alert.addAction(UIAlertAction(title: "Album", style: .default, handler: { _ in
+            self.choosePhotoFromPicker()
+        }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(alert,animated: true)
     }
@@ -197,8 +221,30 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    func getUserProfilePicture() {
+        QBRequest.blob(withID: curUser.blobID, successBlock: { (response, blob) in
+            
+            guard let blobUID = blob.uid else {return}
+            QBRequest.downloadFile(withUID: blobUID, successBlock: { (response, fileData)  in
+                if let image = UIImage(data: fileData) {
+                    self.profilePicture.image = image
+                }
+            }, statusBlock: { (request, status) in
+                print("Image being downloaded:",status)
+            }, errorBlock: { (response) in
+                print("Failed to download Image:",response)
+            })
+            
+        }, errorBlock: { (response) in
+            print("Failed to get blobId:",response)
+        })
+    }
+    
     func setTextFieldValues() {
+        getUserProfilePicture()
+        
         fullNameFld.text = curUser.fullName
+        
         if let curUserEmail = curUser.email {
             emailFld.text = curUserEmail
         }
@@ -222,9 +268,8 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func updateProfileImage() {
-        let image = UIImage(systemName: "person.circle")
-        guard let imageData = image?.pngData() else {
+    func updateProfileImage(completion: @escaping () -> Void) {
+        guard let imageData = selectedImage?.pngData() else {
             return
         }
 
@@ -236,19 +281,27 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
             parameters.blobID = uploadedBlob.id
             
             QBRequest.updateCurrentUser(parameters, successBlock: { (response, user) in
+                print("Success Update of Profile Picture")
+                self.isUploadingPicture = false
                 
+                completion()
             }, errorBlock: { (response) in
-                
+                print("Error on Update of Profile Picture")
+                self.isUploadingPicture = false
+                completion()
             })
             
         }, statusBlock: { (request, status) in
-            
+            print("Uploading Picture")
+            self.isUploadingPicture = true
         }, errorBlock: { (response) in
-            
+            print("Error on upload")
+            self.isUploadingPicture = false
+            completion()
         })
     }
     
-    func navigateTo<T:UIViewController>(withStoryboard storyboard: String, to identifier: String, class: T.Type){
+    func navigateTo<T:UIViewController>(withStoryboard storyboard: String, to identifier: String, class: T.Type) {
         let storyBoard = UIStoryboard.init(name: storyboard, bundle: nil)
         guard let viewController = storyBoard.instantiateViewController(identifier: identifier) as? T else {return}
         self.navigationController?.pushViewController(viewController, animated: true)
@@ -261,15 +314,16 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
 
 extension EditProfileViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
         guard let image = info[.editedImage] as? UIImage else {
             //Use during production/real project
             //return
             //development only use fatal error
             fatalError("Image invalid")
         }
-        
+        didSelectPicture = true
         profilePicture.image = image
+        selectedImage = image
+        updateButton.isEnabled = true
         
         picker.dismiss(animated: true)
     }
@@ -283,4 +337,9 @@ extension EditProfileViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         scrollView.contentOffset.x = 0.0
     }
+}
+
+
+protocol ProfilePictureDelegate {
+    func imgChange(image: UIImage)
 }
