@@ -9,12 +9,13 @@ import UIKit
 import Quickblox
 
 class SignUpViewController: UIViewController {
-    
     @IBOutlet var signUpBG: UIImageView!
     @IBOutlet weak var usernameFld: UITextField!
     @IBOutlet weak var fullNameFld: UITextField!
     @IBOutlet weak var passwordFld: UITextField!
     @IBOutlet weak var signUpForm: UIView!
+    
+    var qbService = QBService.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,27 +47,50 @@ class SignUpViewController: UIViewController {
         self.view.sendSubviewToBack(signUpBG)
     }
     
-    func qbSignUp() {
-        let user = QBUUser()
+    func getNewUserDetails() -> QBUUser {
+        var user = QBUUser()
         user.login = usernameFld.text!
-        user.fullName = fullNameFld.text!
         user.password = passwordFld.text!
-        
-        QBRequest.signUp(user, successBlock: { response, user in
-            print("Success:",response)
-            print("User Created:",user)
-            self.qbSignIn(user: user)
-            self.handlerOnSuccessRegistration()
-        }, errorBlock: { (response) in
-            
-        })
+        return user
     }
     
-    func qbSignIn(user: QBUUser) {
-        QBRequest.logIn(withUserLogin: user.login!, password: user.password!) { response, user in
-            
+    func qbSignUp() {
+        let registerUser = getNewUserDetails()
+        
+        qbService.signUp(newUser: registerUser) { result in
+            switch result {
+            case .success(let user):
+                self.qbService.signIn(with: user.login!, password: user.password!) { result in
+                    switch result {
+                        
+                    case .success(let user):
+                        self.qbService.connect(withUser: user) {
+                            self.goToUserList()
+                        } _: { error in
+                            print("Connect Server Error: ",error)
+                        }
+                        
+                    case .failure(let error):
+                        print("Sign In Error: ",error)
+                    }
+                }
+                //                self.goToChatController(user: user)
+            case .failure(let error):
+                print(error)
+            }
         }
     }
+    
+    func navigateTo<T:UIViewController>(withStoryboard storyboard: String, to identifier: String, class: T.Type){
+        let storyBoard = UIStoryboard.init(name: storyboard, bundle: nil)
+        guard let viewController = storyBoard.instantiateViewController(identifier: identifier) as? T else {return}
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func goToUserList() {
+        self.navigateTo(withStoryboard: "Main", to: "UsersListViewController", class: UsersListViewController.self)
+    }
+    
     
     func handlerOnSuccessRegistration() {
         displayAlert()

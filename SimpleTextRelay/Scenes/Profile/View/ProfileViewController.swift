@@ -11,9 +11,8 @@ import Quickblox
 class ProfileViewController: UIViewController {
     
     var currentUser: QBUUser?
-
     @IBOutlet weak var fullNameLbl: UILabel!
-    @IBOutlet weak var loginLbl: UILabel!
+    @IBOutlet weak var phoneNumber: UILabel!
     @IBOutlet weak var emailLbl: UILabel!
     @IBOutlet weak var websiteLbl: UILabel!
     @IBOutlet weak var pictureView: UIView!
@@ -25,9 +24,8 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         currentUser = QBSession.current.currentUser
-        
         fullNameLbl.text = currentUser?.fullName
-        loginLbl.text = currentUser?.login
+        phoneNumber.text = currentUser?.phone ?? "No Phone Number"
         emailLbl.text = currentUser?.email ?? "No Email"
         websiteLbl.text = currentUser?.website ?? "No Website"
     }
@@ -38,17 +36,18 @@ class ProfileViewController: UIViewController {
         addCustomDesign()
         customPictureView()
     }
+    @IBAction func navigateToEditProfile(_ sender: Any) {
+        goToEditProfile()
+    }
     
     func addCustomDesign() {
         profileForm.roundCorners(corners: [.topLeft,.topRight], radius: 20)
     }
     
     func customImgBg() {
-        let bgImg = UIImage(named: "loginBg")
         imgBg = UIImageView(frame: UIScreen.main.bounds)
         imgBg.contentMode = .scaleAspectFill
         imgBg.clipsToBounds = true
-        imgBg.image = bgImg
         self.view.addSubview(imgBg)
         self.view.sendSubviewToBack(imgBg)
         self.view.bringSubviewToFront(pictureView)
@@ -56,16 +55,19 @@ class ProfileViewController: UIViewController {
     }
     
     func customPictureView() {
-        profilePicture.clipsToBounds = true
-        profilePicture.contentMode = .scaleAspectFill
         profilePicture.layer.masksToBounds = true
-        profilePicture.image = UIImage(named: "loginBg")
         profilePicture.layer.cornerRadius = profilePicture.frame.size.width/2
         pictureView.layer.cornerRadius = pictureView.frame.size.width/2
         pictureView.clipsToBounds = true
         pictureView.backgroundColor = .lightGray
     }
     
+//    func getUserCustomData() {
+//        if let data = curUser.customData?.data(using: .utf8),
+//           let currentUserCustomData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : String]  {
+//            self.curUserCustomData = currentUserCustomData
+//        }
+//    }
     
     func logout() {
         let sb = UIStoryboard(name: "Main", bundle: nil)
@@ -88,4 +90,16 @@ class ProfileViewController: UIViewController {
             print("Log out error:",response)
         })
     }
+    
+    func navigateTo<T:UIViewController>(withStoryboard storyboard: String, to identifier: String, class: T.Type) {
+        let storyBoard = UIStoryboard.init(name: storyboard, bundle: nil)
+        guard let viewController = storyBoard.instantiateViewController(identifier: identifier) as? T else {return}
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func goToEditProfile() {
+        self.navigateTo(withStoryboard: "Main", to: "EditProfileViewController", class: EditProfileViewController.self)
+    }
+    
+    
 }

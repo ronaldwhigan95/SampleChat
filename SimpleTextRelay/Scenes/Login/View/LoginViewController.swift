@@ -9,14 +9,13 @@ import UIKit
 import Quickblox
 
 class LoginViewController: UIViewController {
-
     @IBOutlet weak var usernameFld: UITextField!
     @IBOutlet weak var passwordFld: UITextField!
     @IBOutlet weak var formView: UIView!
     @IBOutlet var signInBG: UIImageView!
     
     
-    
+    var qbService = QBService.shared
     var existingUser: QBUUser?
     
     override func viewDidLoad() {
@@ -54,19 +53,26 @@ class LoginViewController: UIViewController {
     
     ///replace temp values later for textfield values
     func signIn() {
-        QBRequest.logIn(withUserLogin: /*usernameFld.text!*/ "johnDoe", password: /*passwordFld.text!*/ "password", successBlock: { (response, user) in
-            
-            self.existingUser = user
-            self.goToUserList()
-
-        }, errorBlock: { (response) in
-            if response.status.rawValue == 401  {
-                self.signUp()
-            } else {
-                //show alerts for Error for network
-                print("Print signIn(), respone: ")
+        qbService.signIn(with: "johnDoe", password: "password") { result in
+            switch result {
+            case .success(let user):
+                self.existingUser = user
+                self.qbService.connect(withUser: user) {
+                    self.goToUserList()
+                } _: { error in
+                    print("Connect Server Error: ",error)
+                }
+                
+            case .failure(let error):
+                print("Sign In Error: ",error)
+                //                if response.status.rawValue == 401  {
+                //                    self.signUp()
+                //                } else {
+                //                    //show alerts for Error for network
+                //                    print("Print signIn(), respone: ")
+                //                }
             }
-        })
+        }
     }
     
     ///Navigates to Registration
@@ -81,20 +87,7 @@ class LoginViewController: UIViewController {
     }
     
     func goToUserList() {
-        self.navigateTo(withStoryboard: "Main", to: "UsersListViewController", class: UsersListViewController.self)
-    }
- 
-    private func signUp() {
-        let user = QBUUser()
-        user.login = usernameFld.text!
-        user.password = passwordFld.text!
-
-
-        QBRequest.signUp(user, successBlock: { response, user in
-            self.goToChatController(user: user)
-        }, errorBlock: { (response) in
-            
-        })
+        self.navigateTo(withStoryboard: "Main", to: "UITabBarController", class: UITabBarController.self)
     }
     
     func isValid() -> Bool {
@@ -105,22 +98,17 @@ class LoginViewController: UIViewController {
             return false
         }
     }
-    
-    private func goToChatController(user: QBUUser) {
-        let chatVc = ChatPageViewController()
-        self.navigationController?.pushViewController(chatVc, animated: true)
-    }
 }
 
 
 
 extension UIView {
     func roundCorners(corners: UIRectCorner, radius: CGFloat) {
-         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-         let mask = CAShapeLayer()
-         mask.path = path.cgPath
-         layer.mask = mask
-     }
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        layer.mask = mask
+    }
 }
 
 extension UIViewController {

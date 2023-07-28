@@ -20,9 +20,10 @@
 		F302B4692A51EFF20085D81E /* Quickblox in Frameworks */ = {isa = PBXBuildFile; productRef = F302B4682A51EFF20085D81E /* Quickblox */; };
 		F302B46E2A51F2E60085D81E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F302B46C2A51F2E60085D81E /* LoginViewController.swift */; };
 		F302B4732A5264000085D81E /* ChatPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F302B4712A5264000085D81E /* ChatPageViewController.swift */; };
-		F36A5F162A532BF000FEF879 /* QuickbloxWebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = F36A5F152A532BF000FEF879 /* QuickbloxWebRTC */; };
+		F33265102A7314E100396BAF /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F332650F2A7314E100396BAF /* CurrentUser.swift */; };
 		F36E2C212A62079200E00728 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36E2C202A62079200E00728 /* SignUpViewController.swift */; };
 		F37C87A72A6796F400601EDB /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37C87A62A6796F400601EDB /* ProfileViewController.swift */; };
+		F37C87A92A69CA2100601EDB /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37C87A82A69CA2100601EDB /* EditProfileViewController.swift */; };
 		F39D7E242A5601DA0043DC28 /* UsersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39D7E232A5601DA0043DC28 /* UsersListViewController.swift */; };
 		F39D7E2B2A5CC3200043DC28 /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39D7E292A5CC3200043DC28 /* ChatTableViewCell.swift */; };
 		F39D7E2C2A5CC3200043DC28 /* ChatTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F39D7E2A2A5CC3200043DC28 /* ChatTableViewCell.xib */; };
@@ -65,8 +66,10 @@
 		F302B4652A51ED840085D81E /* ApiKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiKeys.swift; sourceTree = "<group>"; };
 		F302B46C2A51F2E60085D81E /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F302B4712A5264000085D81E /* ChatPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPageViewController.swift; sourceTree = "<group>"; };
+		F332650F2A7314E100396BAF /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
 		F36E2C202A62079200E00728 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		F37C87A62A6796F400601EDB /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		F37C87A82A69CA2100601EDB /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		F39D7E232A5601DA0043DC28 /* UsersListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListViewController.swift; sourceTree = "<group>"; };
 		F39D7E292A5CC3200043DC28 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		F39D7E2A2A5CC3200043DC28 /* ChatTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatTableViewCell.xib; sourceTree = "<group>"; };
@@ -80,7 +83,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F36A5F162A532BF000FEF879 /* QuickbloxWebRTC in Frameworks */,
 				F302B4692A51EFF20085D81E /* Quickblox in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +127,7 @@
 		F302B4312A51E7030085D81E /* SimpleTextRelay */ = {
 			isa = PBXGroup;
 			children = (
+				F332650D2A7313F500396BAF /* Models */,
 				F302B46A2A51F2C60085D81E /* Scenes */,
 				F302B4622A51ED5D0085D81E /* Utilities */,
 				F39D7E2D2A5D9FED0043DC28 /* Service */,
@@ -211,6 +214,22 @@
 			path = ChatPage;
 			sourceTree = "<group>";
 		};
+		F332650D2A7313F500396BAF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F332650E2A7314C800396BAF /* User */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F332650E2A7314C800396BAF /* User */ = {
+			isa = PBXGroup;
+			children = (
+				F332650F2A7314E100396BAF /* CurrentUser.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
 		F36A5F0D2A531DAB00FEF879 /* UsersList */ = {
 			isa = PBXGroup;
 			children = (
@@ -248,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				F37C87A62A6796F400601EDB /* ProfileViewController.swift */,
+				F37C87A82A69CA2100601EDB /* EditProfileViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -334,7 +354,6 @@
 			name = SimpleTextRelay;
 			packageProductDependencies = (
 				F302B4682A51EFF20085D81E /* Quickblox */,
-				F36A5F152A532BF000FEF879 /* QuickbloxWebRTC */,
 			);
 			productName = SimpleTextRelay;
 			productReference = F302B42F2A51E7030085D81E /* SimpleTextRelay.app */;
@@ -410,7 +429,6 @@
 			mainGroup = F302B4262A51E7030085D81E;
 			packageReferences = (
 				F302B4672A51EFF10085D81E /* XCRemoteSwiftPackageReference "ios-quickblox-sdk" */,
-				F36A5F142A532BF000FEF879 /* XCRemoteSwiftPackageReference "ios-quickblox-sdk-webrtc" */,
 			);
 			productRefGroup = F302B4302A51E7030085D81E /* Products */;
 			projectDirPath = "";
@@ -462,9 +480,11 @@
 				F39D7E3E2A5DA4190043DC28 /* QBService.swift in Sources */,
 				F302B4372A51E7030085D81E /* ViewController.swift in Sources */,
 				F39D7E242A5601DA0043DC28 /* UsersListViewController.swift in Sources */,
+				F37C87A92A69CA2100601EDB /* EditProfileViewController.swift in Sources */,
 				F36E2C212A62079200E00728 /* SignUpViewController.swift in Sources */,
 				F302B4332A51E7030085D81E /* AppDelegate.swift in Sources */,
 				F39D7E3C2A5DA38F0043DC28 /* QBConstants.swift in Sources */,
+				F33265102A7314E100396BAF /* CurrentUser.swift in Sources */,
 				F39D7E2B2A5CC3200043DC28 /* ChatTableViewCell.swift in Sources */,
 				F37C87A72A6796F400601EDB /* ProfileViewController.swift in Sources */,
 				F302B4662A51ED840085D81E /* ApiKeys.swift in Sources */,
@@ -762,6 +782,244 @@
 			};
 			name = Release;
 		};
+		F33264C92A70205100396BAF /* Debug - DEV */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug - DEV";
+		};
+		F33264CA2A70205100396BAF /* Debug - DEV */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SimpleTextRelay/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RonaldWhigan.SimpleTextRelay;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug - DEV";
+		};
+		F33264CB2A70205100396BAF /* Debug - DEV */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RonaldWhigan.SimpleTextRelayTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimpleTextRelay.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SimpleTextRelay";
+			};
+			name = "Debug - DEV";
+		};
+		F33264CC2A70205100396BAF /* Debug - DEV */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RonaldWhigan.SimpleTextRelayUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SimpleTextRelay;
+			};
+			name = "Debug - DEV";
+		};
+		F33264CD2A7020AA00396BAF /* Release - DEV */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release - DEV";
+		};
+		F33264CE2A7020AA00396BAF /* Release - DEV */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SimpleTextRelay/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RonaldWhigan.SimpleTextRelay;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Release - DEV";
+		};
+		F33264CF2A7020AA00396BAF /* Release - DEV */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RonaldWhigan.SimpleTextRelayTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimpleTextRelay.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SimpleTextRelay";
+			};
+			name = "Release - DEV";
+		};
+		F33264D02A7020AA00396BAF /* Release - DEV */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RonaldWhigan.SimpleTextRelayUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SimpleTextRelay;
+			};
+			name = "Release - DEV";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -769,7 +1027,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F302B4572A51E7040085D81E /* Debug */,
+				F33264C92A70205100396BAF /* Debug - DEV */,
 				F302B4582A51E7040085D81E /* Release */,
+				F33264CD2A7020AA00396BAF /* Release - DEV */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -778,7 +1038,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F302B45A2A51E7040085D81E /* Debug */,
+				F33264CA2A70205100396BAF /* Debug - DEV */,
 				F302B45B2A51E7040085D81E /* Release */,
+				F33264CE2A7020AA00396BAF /* Release - DEV */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -787,7 +1049,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F302B45D2A51E7040085D81E /* Debug */,
+				F33264CB2A70205100396BAF /* Debug - DEV */,
 				F302B45E2A51E7040085D81E /* Release */,
+				F33264CF2A7020AA00396BAF /* Release - DEV */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -796,7 +1060,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F302B4602A51E7040085D81E /* Debug */,
+				F33264CC2A70205100396BAF /* Debug - DEV */,
 				F302B4612A51E7040085D81E /* Release */,
+				F33264D02A7020AA00396BAF /* Release - DEV */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -812,14 +1078,6 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		F36A5F142A532BF000FEF879 /* XCRemoteSwiftPackageReference "ios-quickblox-sdk-webrtc" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/QuickBlox/ios-quickblox-sdk-webrtc.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -827,11 +1085,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F302B4672A51EFF10085D81E /* XCRemoteSwiftPackageReference "ios-quickblox-sdk" */;
 			productName = Quickblox;
-		};
-		F36A5F152A532BF000FEF879 /* QuickbloxWebRTC */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F36A5F142A532BF000FEF879 /* XCRemoteSwiftPackageReference "ios-quickblox-sdk-webrtc" */;
-			productName = QuickbloxWebRTC;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

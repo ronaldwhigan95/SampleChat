@@ -45,7 +45,7 @@ class ChatPageViewController: UIViewController {
     
     func connectServer() {
         QBChat.instance.connect(withUserID: currentUser.id, password: currentUser.password!) { error in
-            print("Connection Error: ",error)
+            print("Connection Error: ",error as Any)
         }
     }
     
@@ -110,6 +110,8 @@ class ChatPageViewController: UIViewController {
     @IBAction func backToDashboard() {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    
     
 }
 
