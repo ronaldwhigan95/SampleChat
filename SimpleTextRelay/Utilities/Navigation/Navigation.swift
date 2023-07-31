@@ -14,5 +14,4 @@ class Navigation{
         guard let viewController = storyBoard.instantiateViewController(identifier: identifier) as? T else {return}
         navController?.pushViewController(viewController, animated: true)
     }
-    //Some Change
 }
