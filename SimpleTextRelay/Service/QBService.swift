@@ -8,16 +8,19 @@
 import Foundation
 import Quickblox
 
-class QBService {
+final class QBService {
     
     ///Shared Instance of QBService
     static var shared = QBService()
     
+    lazy var jsonService = JsonService.shared
+    let user = QBSession.current.currentUser
     
     ///Initializes QuickBlox for whole application
-    func qbInitialize() {
+    static func qbInitialize() {
         let key = QBConstants()
         Quickblox.initWithApplicationId(key.appId, authKey: key.authKey, authSecret: key.authSecret, accountKey: key.acctKey)
+        QBSettings.applicationID = key.appId
         QBSettings.enableXMPPLogging()
         QBSettings.autoReconnectEnabled = true
         QBSettings.carbonsEnabled = true
@@ -58,8 +61,8 @@ class QBService {
     }
     
     ///Gets current user
-    func getCurrentUser() -> QBUUser {
-        guard let curr = QBSession.current.currentUser else {return QBUUser()}
+    func getCurrentUser() -> QBUUser? {
+        guard let curr = QBSession.current.currentUser else {return nil}
         return curr
     }
     
@@ -74,11 +77,100 @@ class QBService {
 //            }
 //        })
 //    }
+    
     func signUp(newUser: QBUUser, completionHandler: @escaping (Result<QBUUser,Error>)->()){
         QBRequest.signUp(newUser, successBlock: { response, user in
             completionHandler(.success(user))
         }, errorBlock: { (response) in
             completionHandler(.failure(response))
+        })
+    }
+    
+    func getUserCustomData(user: QBUUser, completionHandler: (UserCustomData)->()) {
+        jsonService.decode(to: UserCustomData.self, source: user.customData?.data(using: .utf8)) { data in
+            completionHandler(data)
+        }
+    }
+    
+    func getUserBlob(user: QBUUser, completionHandler:@escaping (Data)->()) {
+        QBRequest.blob(withID: user.blobID, successBlock: { (response, blob) in
+            
+            guard let blobUID = blob.uid else {return}
+            QBRequest.downloadFile(withUID: blobUID, successBlock: { (response, fileData)  in
+                completionHandler(fileData)
+//                if let image = UIImage(data: fileData) {
+//                    self.profilePicture.image = image
+//                }
+            }, statusBlock: { (request, status) in
+                print("Image being downloaded:",status)
+            }, errorBlock: { (response) in
+                print("Failed to download Image:",response)
+            })
+            
+        }, errorBlock: { (response) in
+            print("Failed to get blobId:",response)
+        })
+    }
+    
+    func logoutUser(completionHandler: @escaping ()->()) {
+        QBRequest.logOut(successBlock: { (response) in
+            print("Successfully Logged out",response)
+            QBChat.instance.disconnect { (error) in
+                completionHandler()
+            }
+            ///Maybe not necessary
+            //            QBRequest.destroySession(successBlock: { (response) in
+            //                print("Detroyed Session: ",response)
+            //            }, errorBlock: { (response) in
+            //                print("Session Destruction Error:",response)
+            //            })
+        }, errorBlock: { (response) in
+            print("Log out error:",response)
+        })
+    }
+    
+    func updateUser(updatedUserParams: QBUpdateUserParameters, successBlock: @escaping ()->()) {
+        QBRequest.updateCurrentUser(updatedUserParams, successBlock: {response, user in
+            // Completion handler after user update
+            successBlock()
+        }, errorBlock: { (response) in
+            // Error handling for user update
+        })
+    }
+    
+    func updateUserCustomData(userData: UserCustomData,completionHandler: (String)->()) {
+        jsonService.encode(from: userData) { jsonString in
+            guard let string = jsonString else { return }
+            completionHandler(string)
+        }
+    }
+    
+    func updateProfileImage(imgData: Data?,completion: @escaping () -> Void) {
+        guard let imageData = imgData else {
+            return
+        }
+        
+        let fileName = "avatar.png"
+        let contentType = "image/png"
+        let isPublic = true
+        QBRequest.tUploadFile(imageData, fileName: fileName, contentType: contentType, isPublic: isPublic, successBlock: { (response, uploadedBlob) in
+            let parameters = QBUpdateUserParameters()
+            parameters.blobID = uploadedBlob.id
+            
+            QBRequest.updateCurrentUser(parameters, successBlock: { (response, user) in
+                print("Success Update of Profile Picture")
+    
+                completion()
+            }, errorBlock: { (response) in
+                print("Error on Update of Profile Picture")
+                completion()
+            })
+            
+        }, statusBlock: { (request, status) in
+            print("Uploading Picture")
+        }, errorBlock: { (response) in
+            print("Error on upload")
+            completion()
         })
     }
 }

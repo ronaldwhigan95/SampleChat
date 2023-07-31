@@ -22,6 +22,9 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var hobbiesLbl: UILabel!
     @IBOutlet weak var bioLbl: UILabel!
     
+    let qbService = QBService.shared
+    let navController = Navigation()
+    
     var currentUser: QBUUser? = nil
     var currentUserCustomData: UserCustomData = UserCustomData()
     
@@ -46,8 +49,13 @@ class ProfileViewController: UIViewController {
         addCustomDesign()
         customPictureView()
     }
+    
     @IBAction func navigateToEditProfile(_ sender: Any) {
         goToEditProfile()
+    }
+    
+    @IBAction func logout(_ sender: Any) {
+        logoutAccount()
     }
     
     func addCustomDesign() {
@@ -81,70 +89,33 @@ class ProfileViewController: UIViewController {
     }
     
     func getUserCustomData() {
-        if let data = currentUser!.customData?.data(using: .utf8) {
-            let decoder = JSONDecoder()
-            do {
-                let currentUserCustomData = try decoder.decode(UserCustomData.self, from: data)
-                self.currentUserCustomData = currentUserCustomData
-            } catch {
-                print("Error decoding custom data: \(error)")
-            }
+        qbService.getUserCustomData(user: currentUser!) { data in
+            self.currentUserCustomData = data
         }
     }
     
     func getUserProfilePicture() {
-        QBRequest.blob(withID: currentUser!.blobID, successBlock: { (response, blob) in
-            
-            guard let blobUID = blob.uid else {return}
-            QBRequest.downloadFile(withUID: blobUID, successBlock: { (response, fileData)  in
-                if let image = UIImage(data: fileData) {
-                    self.profilePicture.image = image
-                }
-            }, statusBlock: { (request, status) in
-                print("Image being downloaded:",status)
-            }, errorBlock: { (response) in
-                print("Failed to download Image:",response)
-            })
-            
-        }, errorBlock: { (response) in
-            print("Failed to get blobId:",response)
-        })
-    }
-    
-    func logout() {
-        let sb = UIStoryboard(name: "Main", bundle: nil)
-        
-        QBRequest.logOut(successBlock: { (response) in
-            print("Logged out",response)
-            QBChat.instance.disconnect { (error) in
-                let loginVc = sb.instantiateViewController(identifier: "LoginViewController")
-                
-                UIApplication.shared.windows.first?.rootViewController = loginVc
-                UIApplication.shared.windows.first?.makeKeyAndVisible()
+        qbService.getUserBlob(user: currentUser!) { data in
+            if let image = UIImage(data: data) {
+                self.profilePicture.image = image
             }
-//
-//            QBRequest.destroySession(successBlock: { (response) in
-//                print("Detroyed Session: ",response)
-//            }, errorBlock: { (response) in
-//                print("Session Destruction Error:",response)
-//            })
-        }, errorBlock: { (response) in
-            print("Log out error:",response)
-        })
+        }
     }
     
-    func navigateTo<T:UIViewController>(withStoryboard storyboard: String, to identifier: String, class: T.Type) {
-        let storyBoard = UIStoryboard.init(name: storyboard, bundle: nil)
-        guard let viewController = storyBoard.instantiateViewController(identifier: identifier) as? T else {return}
-        self.navigationController?.pushViewController(viewController, animated: true)
+    func logoutAccount() {
+        qbService.logoutUser {
+            let sb = UIStoryboard(name: "Main", bundle: nil)
+            let loginVc = sb.instantiateViewController(identifier: "LoginViewController")
+            
+            UIApplication.shared.windows.first?.rootViewController = loginVc
+            UIApplication.shared.windows.first?.makeKeyAndVisible()
+        }
     }
-    
+
     func goToEditProfile() {
         getChangedImage()
-        self.navigateTo(withStoryboard: "Main", to: "EditProfileViewController", class: EditProfileViewController.self)
+        navController.navigateTo(withStoryboard: "Main", to: "EditProfileViewController", class: EditProfileViewController.self, navController: self.navigationController)
     }
-    
-    
 }
 
 extension ProfileViewController: ProfilePictureDelegate {

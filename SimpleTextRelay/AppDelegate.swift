@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Quickblox
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         //initialize here 3rd party and in build SDK
 
-        QBService.shared.qbInitialize()
+        QBService.qbInitialize()
         
         return true
     }

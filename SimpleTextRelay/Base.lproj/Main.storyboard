@@ -38,7 +38,10 @@
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UWS-ol-af9">
-                                <rect key="frame" x="23" y="81" width="62" height="35"/>
+                                <rect key="frame" x="5" y="79" width="90" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="90" id="ZuL-3j-o0O"/>
+                                </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Back"/>
                                 <connections>
@@ -59,32 +62,42 @@
                                     <action selector="sendMessage:" destination="Im9-gS-SaU" eventType="touchUpInside" id="Puh-YW-IOT"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TXg-H3-ggE">
+                                <rect key="frame" x="105" y="83.666666666666671" width="268" height="20.333333333333329"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="cOf-tb-jmJ"/>
                         <color key="backgroundColor" red="0.94571520620000005" green="0.94571520620000005" blue="0.94571520620000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="cOf-tb-jmJ" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="2sL-Ad-nEf" secondAttribute="trailing" symbolic="YES" id="1nR-4h-Fl4"/>
+                            <constraint firstItem="TXg-H3-ggE" firstAttribute="leading" secondItem="UWS-ol-af9" secondAttribute="trailing" constant="10" id="7fm-G4-1fE"/>
                             <constraint firstItem="2sL-Ad-nEf" firstAttribute="leading" secondItem="W4D-23-1K4" secondAttribute="trailing" constant="10" id="7ot-e5-E39"/>
+                            <constraint firstItem="7s9-N2-W73" firstAttribute="top" secondItem="UWS-ol-af9" secondAttribute="bottom" constant="20" id="9Pg-SE-OmF"/>
                             <constraint firstItem="7s9-N2-W73" firstAttribute="leading" secondItem="qn5-ml-asY" secondAttribute="leading" id="G8d-Sr-IBB"/>
                             <constraint firstItem="cOf-tb-jmJ" firstAttribute="trailing" secondItem="2sL-Ad-nEf" secondAttribute="trailing" constant="20" id="Hkd-dM-PnD"/>
-                            <constraint firstItem="7s9-N2-W73" firstAttribute="top" secondItem="UWS-ol-af9" secondAttribute="bottom" constant="8" symbolic="YES" id="VSj-tm-UAK"/>
+                            <constraint firstItem="7s9-N2-W73" firstAttribute="top" secondItem="TXg-H3-ggE" secondAttribute="bottom" constant="20" id="O26-Ir-wAb"/>
                             <constraint firstItem="cOf-tb-jmJ" firstAttribute="bottom" secondItem="2sL-Ad-nEf" secondAttribute="bottom" constant="50" id="Wr0-mS-2oT"/>
                             <constraint firstItem="W4D-23-1K4" firstAttribute="leading" secondItem="cOf-tb-jmJ" secondAttribute="leading" constant="20" id="ase-tK-HVc"/>
                             <constraint firstItem="cOf-tb-jmJ" firstAttribute="bottom" secondItem="W4D-23-1K4" secondAttribute="bottom" constant="50" id="cOa-tH-X6W"/>
                             <constraint firstItem="7s9-N2-W73" firstAttribute="top" secondItem="cOf-tb-jmJ" secondAttribute="top" constant="65" id="cUm-vx-0GX"/>
-                            <constraint firstItem="cOf-tb-jmJ" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="UWS-ol-af9" secondAttribute="trailing" symbolic="YES" id="fsi-gB-HAD"/>
                             <constraint firstItem="7s9-N2-W73" firstAttribute="centerX" secondItem="qn5-ml-asY" secondAttribute="centerX" id="o5M-Cc-VZW"/>
-                            <constraint firstItem="UWS-ol-af9" firstAttribute="leading" secondItem="cOf-tb-jmJ" secondAttribute="leading" constant="23" id="ybs-vC-wEj"/>
+                            <constraint firstItem="UWS-ol-af9" firstAttribute="leading" secondItem="cOf-tb-jmJ" secondAttribute="leading" constant="5" id="wOJ-gB-8eN"/>
+                            <constraint firstItem="cOf-tb-jmJ" firstAttribute="trailing" secondItem="TXg-H3-ggE" secondAttribute="trailing" constant="20" id="zFa-2u-RtN"/>
+                            <constraint firstItem="UWS-ol-af9" firstAttribute="top" secondItem="cOf-tb-jmJ" secondAttribute="top" constant="20" id="zzr-kw-Fxx"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="chatTable" destination="7s9-N2-W73" id="CwU-PE-QVd"/>
                         <outlet property="messageFld" destination="W4D-23-1K4" id="YEC-cz-JWJ"/>
+                        <outlet property="recipientLbl" destination="TXg-H3-ggE" id="Vb2-M0-7EA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7WE-LE-YO5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1011" y="693"/>
+            <point key="canvasLocation" x="1009.9236641221373" y="692.25352112676057"/>
         </scene>
         <!--Profile-->
         <scene sceneID="9zO-3U-G1N">
@@ -196,6 +209,9 @@
                                 <buttonConfiguration key="configuration" style="plain" title="Logout">
                                     <color key="baseForegroundColor" systemColor="systemRedColor"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="logout:" destination="FQM-0Y-bL0" eventType="touchUpInside" id="fe9-F1-br0"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qq9-jM-dr1" userLabel="Edit">
                                 <rect key="frame" x="323" y="59" width="35" height="35"/>

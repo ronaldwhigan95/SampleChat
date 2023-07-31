@@ -26,18 +26,18 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
     
     let imagePicker = UIImagePickerController()
     let updateUserParameters = QBUpdateUserParameters()
+    let qbService = QBService.shared
     
     var curUser = QBUUser()
     var curUserCustomData: UserCustomData = UserCustomData(dob: "", hobbies: "", bio: "", jobTitle: "")
     var selectedImage: UIImage? = nil
-    var isUploadingPicture: Bool = false
     var didSelectPicture: Bool = false
     var profilePictureTransferDelegate: ProfilePictureDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
-        curUser = QBService.shared.getCurrentUser()
+        curUser = QBService.shared.getCurrentUser()!
         getUserCustomData()
         setTextFieldValues()
         assignDelegates()
@@ -101,17 +101,17 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
             updateUserParameters.fullName = fullNameText
             updateButton.isEnabled = true
         }
-
+        
         if let emailText = emailFld.text, !emailText.isEmpty, curUser.email != emailText {
             updateUserParameters.email = emailText
             updateButton.isEnabled = true
         }
-
+        
         if let phoneText = phoneFld.text, !phoneText.isEmpty, curUser.phone != phoneText {
             updateUserParameters.phone = phoneText
             updateButton.isEnabled = true
         }
-
+        
         if let webText = websiteLinkFld.text, !webText.isEmpty, curUser.website != webText {
             updateUserParameters.website = webText
             updateButton.isEnabled = true
@@ -121,51 +121,42 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
             curUserCustomData.dob = dobText
             updateButton.isEnabled = true
         }
-
+        
         if let jobText = jobTitleFld.text, !jobText.isEmpty, curUserCustomData.jobTitle != jobText {
             curUserCustomData.jobTitle = jobText
             updateButton.isEnabled = true
         }
-
+        
         if let bioText = bioFld.text, !bioText.isEmpty, curUserCustomData.bio != bioText {
             curUserCustomData.bio = bioText
             updateButton.isEnabled = true
         }
-
+        
         if let hobbyText = hobbiesFld.text, !hobbyText.isEmpty, curUserCustomData.hobbies != hobbyText {
             curUserCustomData.hobbies = hobbyText
             updateButton.isEnabled = true
         }
     }
-
-
     
-    ///TODO -
+    
     func updateUser() {
-        
         if didSelectPicture {
-               let alert = updateAlertWithProfilePicture()
+            let alert = updateAlertWithProfilePicture()
             present(alert, animated: true)
-               updateProfileImage { [weak self] in
-                   // Completion handler after image upload
-                   self?.updateUserCustomData()
-                   QBRequest.updateCurrentUser(self!.updateUserParameters, successBlock: {response, user in
-                       // Completion handler after user update
-                       alert.dismiss(animated: true)
-                       self?.goToProfile()
-                   }, errorBlock: { (response) in
-                       // Error handling for user update
-                   })
-               }
-           } else {
-               updateUserCustomData()
-               QBRequest.updateCurrentUser(updateUserParameters, successBlock: {response, user in
-                   self.profilePictureTransferDelegate?.imgChange(image: self.selectedImage!)
-                   self.goToProfile()
-               }, errorBlock: { (response) in
-                   // Error handling for user update
-               })
-           }
+            updateProfileImage { [weak self] in
+                self?.updateUserCustomData()
+                self?.qbService.updateUser(updatedUserParams: self!.updateUserParameters, successBlock: {
+                    alert.dismiss(animated: true)
+                    self?.goToProfile()
+                })
+            }
+        } else {
+            updateUserCustomData()
+            self.qbService.updateUser(updatedUserParams: updateUserParameters, successBlock: {
+                self.profilePictureTransferDelegate?.imgChange(image: self.selectedImage!)
+                self.goToProfile()
+            })
+        }
     }
     
     func updateAlertWithProfilePicture() -> UIAlertController {
@@ -198,17 +189,12 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     func updateUserCustomData() {
-        let encoder = JSONEncoder()
-        do {
-            encoder.outputFormatting = .prettyPrinted
-            let customJSONData = try encoder.encode(curUserCustomData)
-            updateUserParameters.customData = String(data: customJSONData, encoding: .utf8)
-        } catch {
-            print("Error encoding custom data: \(error)")
-            return
+        qbService.updateUserCustomData(userData: curUserCustomData) { string in
+            updateUserParameters.customData = string
         }
     }
     
+    //Add to constructor
     func getUserCustomData() {
         if let data = curUser.customData?.data(using: .utf8) {
             let decoder = JSONDecoder()
@@ -221,6 +207,7 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    //Add to constructor
     func getUserProfilePicture() {
         QBRequest.blob(withID: curUser.blobID, successBlock: { (response, blob) in
             
@@ -269,36 +256,7 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     func updateProfileImage(completion: @escaping () -> Void) {
-        guard let imageData = selectedImage?.pngData() else {
-            return
-        }
-
-        let fileName = "avatar.png"
-        let contentType = "image/png"
-        let isPublic = true
-        QBRequest.tUploadFile(imageData, fileName: fileName, contentType: contentType, isPublic: isPublic, successBlock: { (response, uploadedBlob) in
-            let parameters = QBUpdateUserParameters()
-            parameters.blobID = uploadedBlob.id
-            
-            QBRequest.updateCurrentUser(parameters, successBlock: { (response, user) in
-                print("Success Update of Profile Picture")
-                self.isUploadingPicture = false
-                
-                completion()
-            }, errorBlock: { (response) in
-                print("Error on Update of Profile Picture")
-                self.isUploadingPicture = false
-                completion()
-            })
-            
-        }, statusBlock: { (request, status) in
-            print("Uploading Picture")
-            self.isUploadingPicture = true
-        }, errorBlock: { (response) in
-            print("Error on upload")
-            self.isUploadingPicture = false
-            completion()
-        })
+        qbService.updateProfileImage(imgData: selectedImage?.pngData(), completion: completion)
     }
     
     func navigateTo<T:UIViewController>(withStoryboard storyboard: String, to identifier: String, class: T.Type) {
@@ -343,3 +301,31 @@ extension EditProfileViewController: UIScrollViewDelegate {
 protocol ProfilePictureDelegate {
     func imgChange(image: UIImage)
 }
+
+
+///Redo for Error handling on func updateProfileImage
+//        guard let imageData = selectedImage?.pngData() else {
+//            return
+//        }
+//
+//        let fileName = "avatar.png"
+//        let contentType = "image/png"
+//        let isPublic = true
+//        QBRequest.tUploadFile(imageData, fileName: fileName, contentType: contentType, isPublic: isPublic, successBlock: { (response, uploadedBlob) in
+//            let parameters = QBUpdateUserParameters()
+//            parameters.blobID = uploadedBlob.id
+//
+//            QBRequest.updateCurrentUser(parameters, successBlock: { (response, user) in
+//                print("Success Update of Profile Picture")
+//                completion()
+//            }, errorBlock: { (response) in
+//                print("Error on Update of Profile Picture")
+//                completion()
+//            })
+//
+//        }, statusBlock: { (request, status) in
+//            print("Uploading Picture")
+//        }, errorBlock: { (response) in
+//            print("Error on upload")
+//            completion()
+//        })

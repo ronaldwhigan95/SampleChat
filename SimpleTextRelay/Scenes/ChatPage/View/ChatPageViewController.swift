@@ -9,20 +9,17 @@ import UIKit
 import Quickblox
 
 class ChatPageViewController: UIViewController {
-    
-    var selectedUser = QBUUser()
-    var currentUser = QBUUser()
-    
-    var chatItems:[QBChatMessage] = []
-    
-    var privateDialog = QBChatDialog(dialogID: "", type: .private)
-    
     @IBOutlet weak var messageFld: UITextField!
     @IBOutlet weak var chatTable: UITableView!
+    @IBOutlet weak var recipientLbl: UILabel!
     
     let message = QBChatMessage()
     
-    
+    var selectedUser = QBUUser()
+    var currentUser = QBUUser()
+    var chatItems:[QBChatMessage] = []
+    var privateDialog = QBChatDialog(dialogID: "", type: .private)
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -32,15 +29,12 @@ class ChatPageViewController: UIViewController {
         let nib = UINib(nibName: "ChatTableViewCell", bundle: nil)
         chatTable.register(nib, forCellReuseIdentifier: "ChatTableViewCell")
         connectServer()
-        
-        
+        recipientLbl.text = selectedUser.fullName
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
         createPrivateDialog()
-        
     }
     
     func connectServer() {
@@ -94,8 +88,6 @@ class ChatPageViewController: UIViewController {
         print("Retrieve messages from Dialog: ",dialog.id!)
         QBRequest.messages(withDialogID: dialog.id!, extendedRequest: extendedRequest, for: page, successBlock: { (response, messages, page) in
             if response.isSuccess {
-                print("Line 96, Response: ",response)
-                print("Line 97, Messages Retrieved: ",messages.count)
                 DispatchQueue.main.async {
                     self.chatItems = messages
                     self.chatTable.reloadData()
@@ -151,7 +143,7 @@ extension ChatPageViewController: UITableViewDataSource {
         let chat = chatItems[indexPath.section]
         cell.textLabel?.text = chat.text
         cell.textLabel?.textAlignment = chat.senderID == currentUser.id ? .right : .left
-        cell.backgroundColor = chat.senderID == currentUser.id ? .systemBlue : .systemGreen
+        cell.backgroundColor = chat.senderID == currentUser.id ? #colorLiteral(red: 0.5354288816, green: 0.6929528117, blue: 0.8018425107, alpha: 1) : #colorLiteral(red: 0.2556434904, green: 0.6479599349, blue: 0.3801348144, alpha: 1)
         cell.layer.cornerRadius = 20
         
         

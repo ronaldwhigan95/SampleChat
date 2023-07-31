@@ -21,6 +21,8 @@
 		F302B46E2A51F2E60085D81E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F302B46C2A51F2E60085D81E /* LoginViewController.swift */; };
 		F302B4732A5264000085D81E /* ChatPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F302B4712A5264000085D81E /* ChatPageViewController.swift */; };
 		F33265102A7314E100396BAF /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F332650F2A7314E100396BAF /* CurrentUser.swift */; };
+		F33265162A780EEE00396BAF /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33265152A780EEE00396BAF /* Navigation.swift */; };
+		F332651A2A78107000396BAF /* JSONService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33265192A78107000396BAF /* JSONService.swift */; };
 		F36E2C212A62079200E00728 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36E2C202A62079200E00728 /* SignUpViewController.swift */; };
 		F37C87A72A6796F400601EDB /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37C87A62A6796F400601EDB /* ProfileViewController.swift */; };
 		F37C87A92A69CA2100601EDB /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37C87A82A69CA2100601EDB /* EditProfileViewController.swift */; };
@@ -67,6 +69,8 @@
 		F302B46C2A51F2E60085D81E /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F302B4712A5264000085D81E /* ChatPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPageViewController.swift; sourceTree = "<group>"; };
 		F332650F2A7314E100396BAF /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
+		F33265152A780EEE00396BAF /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
+		F33265192A78107000396BAF /* JSONService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONService.swift; sourceTree = "<group>"; };
 		F36E2C202A62079200E00728 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		F37C87A62A6796F400601EDB /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		F37C87A82A69CA2100601EDB /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 		F302B4622A51ED5D0085D81E /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				F33265132A780ED500396BAF /* Navigation */,
 				F302B4642A51ED720085D81E /* ApiKeys */,
 				F302B4632A51ED660085D81E /* Constants */,
 			);
@@ -230,6 +235,22 @@
 			path = User;
 			sourceTree = "<group>";
 		};
+		F33265132A780ED500396BAF /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				F33265152A780EEE00396BAF /* Navigation.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		F33265182A780FEA00396BAF /* JSONService */ = {
+			isa = PBXGroup;
+			children = (
+				F33265192A78107000396BAF /* JSONService.swift */,
+			);
+			path = JSONService;
+			sourceTree = "<group>";
+		};
 		F36A5F0D2A531DAB00FEF879 /* UsersList */ = {
 			isa = PBXGroup;
 			children = (
@@ -275,6 +296,7 @@
 		F39D7E2D2A5D9FED0043DC28 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				F33265182A780FEA00396BAF /* JSONService */,
 				F39D7E3D2A5DA4190043DC28 /* QBService.swift */,
 			);
 			path = Service;
@@ -474,6 +496,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F332651A2A78107000396BAF /* JSONService.swift in Sources */,
 				F302B46E2A51F2E60085D81E /* LoginViewController.swift in Sources */,
 				F302B4732A5264000085D81E /* ChatPageViewController.swift in Sources */,
 				F39D7E402A5DA62B0043DC28 /* LoginViewModel.swift in Sources */,
@@ -485,6 +508,7 @@
 				F302B4332A51E7030085D81E /* AppDelegate.swift in Sources */,
 				F39D7E3C2A5DA38F0043DC28 /* QBConstants.swift in Sources */,
 				F33265102A7314E100396BAF /* CurrentUser.swift in Sources */,
+				F33265162A780EEE00396BAF /* Navigation.swift in Sources */,
 				F39D7E2B2A5CC3200043DC28 /* ChatTableViewCell.swift in Sources */,
 				F37C87A72A6796F400601EDB /* ProfileViewController.swift in Sources */,
 				F302B4662A51ED840085D81E /* ApiKeys.swift in Sources */,

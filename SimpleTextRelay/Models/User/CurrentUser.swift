@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserCustomData: Codable {
+struct UserCustomData: Encodable, Decodable {
     var dob: String?
     var hobbies: String?
     var bio: String?
